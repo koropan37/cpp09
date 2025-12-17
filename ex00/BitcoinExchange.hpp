@@ -6,7 +6,7 @@
 #include <ctime>
 #include <fstream>
 
-#define FILEERROR "Error: could not open file."
+#define OPENERR "Error: could not open file."
 
 class BitcoinExchange {
  private:
@@ -20,9 +20,12 @@ class BitcoinExchange {
     BitcoinExchange();
     ~BitcoinExchange();
 
-    void inputCSV(std::ifstream& ifs);
-    void exchange(const std::string& path);
-
+    void inputCsv(std::ifstream& ifs);
+    void exchange(std::ifstream& path);
+    
+    void printExchange(const std::string &date_str, 
+                       const std::string &rate_str, 
+                       time_t time, double rate);
     double getData(time_t time) const;
 };
 

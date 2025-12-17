@@ -5,10 +5,10 @@
 
 int main(int argc, char *argv[]) {
     try { 
-        if (argc != 2) throw std::invalid_argument(FILEERROR);
+        if (argc != 2) throw std::invalid_argument(OPENERR);
         BitcoinExchange btc;
-        std::string path = static_cast<std::string>(argv[1]);
-
+        std::ifstream path(argv[1]);
+        if(!path) throw std::invalid_argument(OPENERR);    
         btc.exchange(path);
         return 0;
     } catch (std::exception &e) {
