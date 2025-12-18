@@ -6,7 +6,7 @@
 #include <ctime>
 #include <fstream>
 
-#define OPENERR "Error: could not open file."
+#define OPENERR "could not open file."
 
 class BitcoinExchange {
  private:
