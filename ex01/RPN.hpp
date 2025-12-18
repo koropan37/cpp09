@@ -14,12 +14,12 @@
 class RPN {
  private:
     std::stack<int> numbers_;
-    int result_;
 
     void add(int n1, int n2);
     void sub(int n1, int n2);
     void mul(int n1, int n2);
     void div(int n1, int n2);
+    void validateChar(const char& c, bool& need_space);
 
     RPN(const RPN& other);
     RPN& operator=(const RPN& other);
@@ -28,9 +28,7 @@ class RPN {
     RPN();
     ~RPN();
     void calculate(const std::string& exp);
-    void validateChar(const char c, bool& need_space);
-
-    
+   
 };
 
 #endif
