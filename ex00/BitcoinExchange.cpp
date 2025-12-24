@@ -27,31 +27,6 @@ BitcoinExchange::BitcoinExchange() {
 
 BitcoinExchange::~BitcoinExchange() {}
 
-void BitcoinExchange::inputCsv(std::ifstream& ifs) {
-    std::string line;
-    if (!std::getline(ifs, line))
-        throw std::runtime_error("csv " FILEEMPTY);
-    if (trimLine(line) != CSVMSG)
-        throw std::runtime_error(std::string(CSVERR) + line);
-
-    while (std::getline(ifs, line)) {
-        if (trimLine(line).empty()) 
-            throw std::runtime_error("csv " FILEEMPTY);
-
-        std::string date_str, rate_str;
-        splitLine(line, ',', date_str, rate_str, CSVERR);
-
-        time_t time = parseDate(date_str);
-        if (data_.count(time)) // 日付の重複エラー
-            throw std::runtime_error(std::string(DUPERR) + date_str);
-
-        double rate;
-        parseCsvRate(rate_str, rate);
-            
-        data_[time] = rate;
-    }
-}
-
 // 前後の空白の除去
 static std::string trimLine(const std::string &s) {
     size_t a = s.find_first_not_of(" \t\r");
@@ -112,28 +87,28 @@ static void parseCsvRate(const std::string& rate_str, double& rate) {
         throw std::runtime_error(std::string(CSVERR) + rate_str);
 }
 
-void BitcoinExchange::exchange(std::ifstream& path) {
+void BitcoinExchange::inputCsv(std::ifstream& ifs) {
     std::string line;
-    if (!std::getline(path, line))
-        throw std::runtime_error("input " FILEEMPTY);
-    if (trimLine(line) != INPUTMSG)
-        throw std::runtime_error(std::string(FILEERR) + line);
-    while (std::getline(path, line)) {
-        try {
-            if (trimLine(line).empty()) continue;
+    if (!std::getline(ifs, line))
+        throw std::runtime_error("csv " FILEEMPTY);
+    if (trimLine(line) != CSVMSG)
+        throw std::runtime_error(std::string(CSVERR) + line);
+
+    while (std::getline(ifs, line)) {
+        if (trimLine(line).empty()) 
+            throw std::runtime_error("csv " FILEEMPTY);
 
         std::string date_str, rate_str;
-        splitLine(line, '|', date_str, rate_str, BADINPUT);
+        splitLine(line, ',', date_str, rate_str, CSVERR);
 
         time_t time = parseDate(date_str);
+        if (data_.count(time)) // 日付の重複エラー
+            throw std::runtime_error(std::string(DUPERR) + date_str);
 
         double rate;
-        parseInputRate(rate_str, rate);
-        
-        printExchange(date_str, rate_str, time, rate);       
-        } catch (std::exception &e) {
-            std::cerr << "Error: " << e.what() << std::endl;
-        } 
+        parseCsvRate(rate_str, rate);
+            
+        data_[time] = rate;
     }
 }
 
@@ -163,4 +138,29 @@ void BitcoinExchange::printExchange(
     std::cout 
         << date_str << " => " << rate_str << " = "
         << getData(time) * rate << std::endl;
+}
+
+void BitcoinExchange::exchange(std::ifstream& path) {
+    std::string line;
+    if (!std::getline(path, line))
+        throw std::runtime_error("input " FILEEMPTY);
+    if (trimLine(line) != INPUTMSG)
+        throw std::runtime_error(std::string(FILEERR) + line);
+    while (std::getline(path, line)) {
+        try {
+            if (trimLine(line).empty()) continue;
+
+        std::string date_str, rate_str;
+        splitLine(line, '|', date_str, rate_str, BADINPUT);
+
+        time_t time = parseDate(date_str);
+
+        double rate;
+        parseInputRate(rate_str, rate);
+        
+        printExchange(date_str, rate_str, time, rate);       
+        } catch (std::exception &e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } 
+    }
 }
