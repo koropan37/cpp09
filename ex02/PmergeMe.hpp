@@ -7,12 +7,26 @@
 
 class PmergeMe {
  public:
-    PmergeMe(int argc, char *argv[]);
-    ~PmergeMe();
+   PmergeMe(int argc, char *argv[]);
+   ~PmergeMe();
  private:
-    std::vector<unsigned int> data_;
 
-    void parseNum(int argc, char *argv[]);
+   struct Pair {
+      unsigned int large_idx;   
+      unsigned int small_idx;  
+      bool inserted;         
+   };
+
+   std::vector<unsigned int> vec_;
+   std::vector<Pair> largeVec_;
+   std::vector<Pair> smallVec_;
+
+   std::deque<unsigned int> deq_;
+   std::deque<Pair> largeDeq_;
+   std::deque<Pair> smallDeq_;
+
+
+   void parseNum(int argc, char *argv[]);
 };
 
 #endif
