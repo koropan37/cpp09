@@ -39,15 +39,10 @@ void PmergeMe::parseNum(int argc, char *argv[]) {
 }
 
 void PmergeMe::initJacobsthal() {
-    Jacobsthal_.clear();
-    Jacobsthal_.push_back(2);
-    Jacobsthal_.push_back(2);
-    
-    for (int i = 2; i < 30; ++i) {  
-        int next = Jacobsthal_[i - 1] + 2 * Jacobsthal_[i - 2];
-        if (next < 0) 
-            break;
-        Jacobsthal_.push_back(next);
+    Jacobsthal_[0] = 2;
+    Jacobsthal_[1] = 2;
+    for (int i = 2; i < JACOBSTHAL_SIZE; ++i) {
+        Jacobsthal_[i] = Jacobsthal_[i - 1] + 2 * Jacobsthal_[i - 2];
     }
 }
 
@@ -93,7 +88,7 @@ void PmergeMe::mergeInsertionSort (Container& container,
     
     int jacobsthalIndex = 0;
     while (!SmallSeq.empty()) {
-        if (jacobsthalIndex >= static_cast<int>(Jacobsthal_.size()))
+        if (jacobsthalIndex >= JACOBSTHAL_SIZE)
             throw std::runtime_error("Jacobsthal overflow");
         
         int groupSize = Jacobsthal_[jacobsthalIndex];
@@ -232,6 +227,12 @@ int PmergeMe::searchInsertPosition(const PairContainer& LargeSeq,
             return getGroupStartPos(SmallSeq, pairIndex, elementSize);
         }
     } else {
+        if (SmallSeq.empty()) {
+            if (LargeSeq.empty()) {
+                return 0;
+            }
+            return LargeSeq[LargeSeq.size() - 1].index_ + 1;
+        }
         return getGroupStartPos(SmallSeq, SmallSeq.size() - 1, elementSize); //余りで全要素より大きい
     }
 }

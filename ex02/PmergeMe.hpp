@@ -14,7 +14,7 @@
 #include <typeinfo>
 #include <iomanip>
 
-#define JACOBSTHAL_SIZE 30
+#define JACOBSTHAL_SIZE 20
 #define NO_PAIR -1
 
 class PmergeMe {
@@ -42,7 +42,7 @@ private:
     size_t vecComp_;
     size_t deqComp_;
     
-    std::vector<int> Jacobsthal_;  // 配列 → vectorに変更
+    int Jacobsthal_[JACOBSTHAL_SIZE];  // 配列 → vectorに変更
 
     void parseNum(int argc, char *argv[]);
     void initJacobsthal();
