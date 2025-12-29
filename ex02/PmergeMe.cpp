@@ -272,8 +272,16 @@ void PmergeMe::updateLargeSeq(PairContainer& LargeSeq, const PairContainer& Smal
 template<typename PairContainer>
 void PmergeMe::updateSmallSeq(PairContainer& SmallSeq, int insertPos, 
                            int smallIndex, int elementSize) {
+    int beginIndex = static_cast<int>(SmallSeq.size());
     for (int i = 0; i < static_cast<int>(SmallSeq.size()); ++i) {
-        if (SmallSeq[i].index_ >= insertPos && i < smallIndex) {
+        if (SmallSeq[i].index_ >= insertPos) {
+            beginIndex = i;
+            break;
+        }
+    }
+    
+    for (int i = beginIndex; i < static_cast<int>(SmallSeq.size()); ++i) {
+        if (i < smallIndex) {
             SmallSeq[i].index_ += elementSize;
         }
         if (SmallSeq[i].pairIndex_ != NO_PAIR) {
