@@ -215,6 +215,11 @@ int PmergeMe::binarySearchLargeSeq(const Container& container,
     return start;
 }
 
+template<typename Container>
+unsigned int PmergeMe::getElement(const Container& container, int index) {
+    return container[index];
+}
+
 template<typename PairContainer>
 int PmergeMe::searchInsertPosition(const PairContainer& LargeSeq, 
                                 const PairContainer& SmallSeq,
@@ -257,22 +262,22 @@ void PmergeMe::moveElements(Container& container, int groupStart, int groupEnd, 
 template<typename PairContainer>
 void PmergeMe::updateLargeSeq(PairContainer& LargeSeq, const PairContainer& SmallSeq,
                            int largeSeqPos, int smallIndex, int elementSize) {
-    int endPairPos = (SmallSeq[smallIndex].pairIndex_ == NO_PAIR)
-                       ? static_cast<int>(LargeSeq.size())
-                       : SmallSeq[smallIndex].pairIndex_;
+    int endPairPos = (SmallSeq[smallIndex].pairIndex_ == NO_PAIR) //　修正終了位置
+                       ? static_cast<int>(LargeSeq.size()) // 余り
+                       : SmallSeq[smallIndex].pairIndex_;  // ペア
     
     for (int i = largeSeqPos; i < endPairPos; ++i) {
-        LargeSeq[i].index_ += elementSize;
+        LargeSeq[i].index_ += elementSize; // index修正
     }
     
-    if (SmallSeq[smallIndex].pairIndex_ != NO_PAIR)
+    if (SmallSeq[smallIndex].pairIndex_ != NO_PAIR) // ペア解除
         LargeSeq[SmallSeq[smallIndex].pairIndex_].pairIndex_ = NO_PAIR;
 }
 
 template<typename PairContainer>
 void PmergeMe::updateSmallSeq(PairContainer& SmallSeq, int insertPos, 
                            int smallIndex, int elementSize) {
-    int beginIndex = static_cast<int>(SmallSeq.size());
+    int beginIndex = static_cast<int>(SmallSeq.size()); // 修正開始位置
     for (int i = 0; i < static_cast<int>(SmallSeq.size()); ++i) {
         if (SmallSeq[i].index_ >= insertPos) {
             beginIndex = i;
@@ -293,15 +298,10 @@ void PmergeMe::updateSmallSeq(PairContainer& SmallSeq, int insertPos,
 
 template<typename PairContainer>
 void PmergeMe::resetLargeSeq(PairContainer& LargeSeq, int groupSize) {
-    for (size_t i = 0; i < LargeSeq.size(); ++i) {
+    for (size_t i = 0; i < LargeSeq.size(); ++i) { // Largeseq のペアの調整
         if (LargeSeq[i].pairIndex_ != NO_PAIR)
             LargeSeq[i].pairIndex_ -= groupSize;
     }
-}
-
-template<typename Container>
-unsigned int PmergeMe::getElement(const Container& container, int index) {
-    return container[index];
 }
 
 unsigned long getTime() {
