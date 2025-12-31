@@ -3,11 +3,9 @@
 #include <stdexcept>
 
 int main(int argc, char *argv[]) {
-    printBefore(argc, argv); 
-    
     try {
         PmergeMe pm(argc, argv);
-        
+        printBefore(argc, argv); 
         unsigned long start = getTime();
         pm.sortVector();
         unsigned long end = getTime();

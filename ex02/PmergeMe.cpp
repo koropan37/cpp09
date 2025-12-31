@@ -174,9 +174,9 @@ void PmergeMe::insertSmallElement(Container& container,
                                   PairContainer& SmallSeq, size_t& comp,
                                   int smallIndex, int elementSize) {
 
-    int largeSeqPos = binarySearchLargeSeq(container, LargeSeq, SmallSeq, 
-                                             comp, smallIndex);
-    int insertPos = searchInsertPosition(LargeSeq, SmallSeq, largeSeqPos, elementSize);
+    int largeSeqPos = binarySearchLargeSeq(container, LargeSeq, SmallSeq, //largeSeq のどこに入れるか
+                                             comp, smallIndex); 
+    int insertPos = searchInsertPosition(LargeSeq, SmallSeq, largeSeqPos, elementSize); // 実データのどこに入れるか
     
     int groupStart = getGroupStartPos(SmallSeq, smallIndex, elementSize);
     int groupEnd = getGroupEndPos(SmallSeq, smallIndex);
